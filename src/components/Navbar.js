@@ -38,7 +38,7 @@ const Navbar = () => {
             >
               <div className="relative">
                 <img 
-                  src="/logo.png" 
+                  src={`${process.env.PUBLIC_URL}/logo.png`} 
                   alt="Web Tasarım Logo" 
                   className="h-12 sm:h-14 md:h-16 w-auto object-contain relative z-10"
                   style={{

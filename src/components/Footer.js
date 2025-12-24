@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <div className="mb-4">
               <img 
-                src="/logo.png" 
+                src={`${process.env.PUBLIC_URL}/logo.png`} 
                 alt="Web Tasarım Logo" 
                 className="h-14 sm:h-16 md:h-20 w-auto max-w-[250px] object-contain mb-4"
                 style={{
