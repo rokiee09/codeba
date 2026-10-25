@@ -1,0 +1,228 @@
+---
+// Kaydırdıkça alttan yükselip düzleşen örnek web paneli penceresi
+import { getLang } from '../i18n';
+const lang = getLang(Astro.url);
+const TEXT: Record<string, any> = {
+  "tr": {
+    "rise.aria": "Örnek web paneli",
+    "rise.eyebrow": "Örnek web paneli · kaydırdıkça yakınlaşır",
+    "rise.url": "panel.ornekklinik.com",
+    "rise.brand": "Klinik",
+    "rise.n1": "Genel bakış",
+    "rise.n2": "Randevular",
+    "rise.n3": "Müşteriler",
+    "rise.n4": "Raporlar",
+    "rise.n5": "Ayarlar",
+    "rise.hello": "Günaydın",
+    "rise.date": "23 Ekim, Cuma",
+    "rise.new": "Yeni randevu",
+    "rise.s1": "Bugünkü randevular",
+    "rise.s2": "Bu hafta",
+    "rise.s3": "Doluluk",
+    "rise.c1": "Saat",
+    "rise.c2": "Danışan",
+    "rise.c3": "Hizmet",
+    "rise.c4": "Durum",
+    "rows": [
+      [
+        "09:00",
+        "AY",
+        "A. Yılmaz",
+        "Kontrol",
+        "ok",
+        "Onaylandı",
+        "#4f8cff"
+      ],
+      [
+        "10:30",
+        "MD",
+        "M. Demir",
+        "İlk görüşme",
+        "new",
+        "Yeni",
+        "#19a463"
+      ],
+      [
+        "11:15",
+        "EK",
+        "E. Kaya",
+        "Kontrol",
+        "ok",
+        "Onaylandı",
+        "#e0752d"
+      ],
+      [
+        "13:00",
+        "SÇ",
+        "S. Çelik",
+        "Takip",
+        "wait",
+        "Bekliyor",
+        "#8b5cf6"
+      ]
+    ]
+  },
+  "en": {
+    "rise.aria": "Sample web dashboard",
+    "rise.eyebrow": "Sample web dashboard · zooms in as you scroll",
+    "rise.url": "app.sampleclinic.com",
+    "rise.brand": "Clinic",
+    "rise.n1": "Overview",
+    "rise.n2": "Appointments",
+    "rise.n3": "Clients",
+    "rise.n4": "Reports",
+    "rise.n5": "Settings",
+    "rise.hello": "Good morning",
+    "rise.date": "Friday, October 23",
+    "rise.new": "New appointment",
+    "rise.s1": "Today's appointments",
+    "rise.s2": "This week",
+    "rise.s3": "Occupancy",
+    "rise.c1": "Time",
+    "rise.c2": "Client",
+    "rise.c3": "Service",
+    "rise.c4": "Status",
+    "rows": [
+      [
+        "09:00",
+        "AY",
+        "A. Young",
+        "Check-up",
+        "ok",
+        "Confirmed",
+        "#4f8cff"
+      ],
+      [
+        "10:30",
+        "MD",
+        "M. Davis",
+        "First visit",
+        "new",
+        "New",
+        "#19a463"
+      ],
+      [
+        "11:15",
+        "EK",
+        "E. King",
+        "Check-up",
+        "ok",
+        "Confirmed",
+        "#e0752d"
+      ],
+      [
+        "13:00",
+        "SC",
+        "S. Clark",
+        "Follow-up",
+        "wait",
+        "Pending",
+        "#8b5cf6"
+      ]
+    ]
+  }
+};
+const r = TEXT[lang];
+---
+
+<section class="rise" aria-label={r['rise.aria']}>
+  <div class="rise-sticky">
+    <p class="rise-cap"><span class="eyebrow">{r['rise.eyebrow']}</span></p>
+    <div class="rise-win">
+      <div class="rw-bar"><i></i><i></i><i></i><span class="rw-url"><svg viewBox="0 0 16 16"><rect x="3.5" y="7" width="9" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>{r['rise.url']}</span></div>
+      <div class="rw-body">
+        <aside class="rw-side">
+          <div class="rw-logo"><span></span>{r['rise.brand']}</div>
+          <a class="on">{r['rise.n1']}</a><a>{r['rise.n2']}</a><a>{r['rise.n3']}</a><a>{r['rise.n4']}</a><a>{r['rise.n5']}</a>
+        </aside>
+        <div class="rw-main">
+          <div class="rw-top"><div><h4>{r['rise.hello']}</h4><p>{r['rise.date']}</p></div><span class="rw-btn">+ {r['rise.new']}</span></div>
+          <div class="rw-stats">
+            <div><p>{r['rise.s1']}</p><b>12</b><span class="up">+3</span></div>
+            <div><p>{r['rise.s2']}</p><b>48</b><span class="up">+8%</span></div>
+            <div><p>{r['rise.s3']}</p><b>%82</b><span class="rw-meter"><i style="width:82%"></i></span></div>
+          </div>
+          <div class="rw-table">
+            <div class="rw-th"><span>{r['rise.c1']}</span><span>{r['rise.c2']}</span><span>{r['rise.c3']}</span><span>{r['rise.c4']}</span></div>
+            {r.rows.map(([tm, ini, nm, sv, k, lbl, c]) => (
+              <div class="rw-tr"><span class="tm">{tm}</span><span class="nm"><span class="av" style={`background:${c}`}>{ini}</span>{nm}</span><span class="sv">{sv}</span><span class={`st ${k}`}>{lbl}</span></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var sec = document.querySelector('.rise'); if (!sec) return;
+  var win = sec.querySelector('.rise-win'), cap = sec.querySelector('.rise-cap');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function update() {
+    var r = sec.getBoundingClientRect(), vh = window.innerHeight;
+    // bölüm ekrana girerken 0, yarı yolda 1
+    var p = Math.min(1, Math.max(0, (vh - r.top) / (r.height * 0.62)));
+    var k = reduce ? 1 : ease(p);
+    win.style.transform = 'translateY(' + (1 - k) * 34 + 'vh) rotateX(' + (1 - k) * 32 + 'deg) scale(' + (0.62 + 0.38 * k) + ')';
+    cap.style.opacity = Math.min(1, k * 1.6);
+  }
+  var ticking = false;
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { update(); ticking = false; }); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+
+<style>
+  .rise { position: relative; height: 190vh; margin-top: 2rem; }
+  .rise-sticky { position: sticky; top: 0; height: 100vh; display: grid; grid-template-rows: auto 1fr; justify-items: center; align-items: start; overflow: hidden; perspective: 1400px; padding-top: 4.5rem; }
+  .rise-cap { margin: 0 0 1.25rem; text-align: center; }
+  .rise-win { width: min(1100px, 92vw); height: min(660px, 74vh); border-radius: 16px; overflow: hidden; background: #f7f8fa; color: #14161b; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 50px 120px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04); transform-origin: 50% 0%; will-change: transform; font-family: var(--sans); display: flex; flex-direction: column; }
+  .rw-bar { display: flex; align-items: center; gap: 7px; padding: 11px 14px; background: #eceef2; border-bottom: 1px solid #dfe2e7; }
+  .rw-bar i { width: 11px; height: 11px; border-radius: 50%; background: #d3d6dc; }
+  .rw-bar i:nth-child(1) { background: #ff5f57; } .rw-bar i:nth-child(2) { background: #febc2e; } .rw-bar i:nth-child(3) { background: #28c840; }
+  .rw-url { margin: 0 auto; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #5b616b; background: #fff; border-radius: 7px; padding: 4px 14px; min-width: 40%; justify-content: center; }
+  .rw-url svg { width: 12px; height: 12px; fill: none; stroke: #28a06a; stroke-width: 1.6; }
+  .rw-body { flex: 1; display: grid; grid-template-columns: 200px 1fr; min-height: 0; }
+  .rw-side { background: #fff; border-right: 1px solid #e6e8ec; padding: 18px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .rw-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; margin: 0 8px 16px; }
+  .rw-logo span { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, #4f8cff, #7cc4ff); }
+  .rw-side a { font-size: 13px; color: #5b616b; padding: 8px 10px; border-radius: 8px; }
+  .rw-side a.on { background: #eef3ff; color: #2350bd; font-weight: 600; }
+  .rw-main { padding: 22px 26px; display: flex; flex-direction: column; gap: 18px; min-width: 0; overflow: hidden; }
+  .rw-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .rw-top h4 { margin: 0; font-size: 20px; font-family: var(--sans); letter-spacing: -.02em; }
+  .rw-top p { margin: 2px 0 0; font-size: 12.5px; color: #8a909a; }
+  .rw-btn { font-size: 12.5px; font-weight: 600; color: #fff; background: #2f6bff; border-radius: 9px; padding: 9px 14px; white-space: nowrap; }
+  .rw-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .rw-stats div { background: #fff; border: 1px solid #e6e8ec; border-radius: 12px; padding: 14px 16px; display: grid; gap: 4px; }
+  .rw-stats p { margin: 0; font-size: 12px; color: #8a909a; }
+  .rw-stats b { font-size: 24px; letter-spacing: -.02em; }
+  .rw-stats .up { font-size: 11.5px; font-weight: 600; color: #19a463; }
+  .rw-stats .rw-meter { display: block; height: 6px; border-radius: 4px; background: #eef1f5; overflow: hidden; margin-top: 4px; }
+  .rw-stats .rw-meter i { display: block; height: 100%; background: #4f8cff; }
+  .rw-table { background: #fff; border: 1px solid #e6e8ec; border-radius: 12px; overflow: hidden; }
+  .rw-th, .rw-tr { display: grid; grid-template-columns: 70px 1.3fr 1fr 110px; gap: 12px; align-items: center; padding: 11px 16px; font-size: 13px; }
+  .rw-th { font-size: 11.5px; color: #8a909a; background: #fafbfc; border-bottom: 1px solid #eef0f3; }
+  .rw-tr + .rw-tr { border-top: 1px solid #f1f2f5; }
+  .rw-tr .tm { font-variant-numeric: tabular-nums; color: #5b616b; }
+  .rw-tr .nm { display: flex; align-items: center; gap: 8px; font-weight: 600; min-width: 0; }
+  .rw-tr .av { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 10px; font-weight: 700; color: #fff; flex: none; }
+  .rw-tr .sv { color: #5b616b; }
+  .st { justify-self: start; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; }
+  .st.ok { background: #e7f7ef; color: #158a52; } .st.wait { background: #fff4e0; color: #b7791f; } .st.new { background: #eaf1ff; color: #2350bd; }
+  @media (max-width: 900px) { .rise { height: 160vh; } .rise-sticky { padding-top: 3rem; } }
+  @media (max-width: 560px) { .rise-cap .eyebrow { font-size: .65rem; } .rise-cap .eyebrow::before { display: none; } }
+  @media (max-width: 760px) {
+    .rise { height: 150vh; }
+    .rw-body { grid-template-columns: 1fr; }
+    .rw-side { display: none; }
+    .rw-stats { grid-template-columns: 1fr 1fr; }
+    .rw-stats div:last-child { display: none; }
+    .rw-th, .rw-tr { grid-template-columns: 52px 1fr 92px; }
+    .rw-th span:nth-child(3), .rw-tr .sv { display: none; }
+    .rw-main { padding: 16px; }
+  }
+</style>

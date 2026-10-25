@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { path, useT, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<Base title={t('about.title')}>
+  <p class="eyebrow">codeba</p>
+  <h1>{t('about.title')}</h1>
+  <p>{t('about.p1')}</p>
+  <p>{t('about.p2')}</p>
+  <p>{t('about.p3')}</p>
+
+  <h2 class="section-label">{t('about.tools')}</h2>
+  <p>{t('about.toolsText')}</p>
+
+  <p><a href={path('contact', lang)} class="btn">{t('about.cta')}</a></p>
+</Base>
+
+<style>
+  p {
+    color: var(--soft);
+  }
+</style>

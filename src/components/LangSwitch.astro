@@ -1,0 +1,315 @@
+---
+// Dil seçici: kapalıyken bayraklı küçük hap; açılınca aşağı inen liste yerine
+// olduğu yerde dönen bir tekerleğe dönüşür (seçili satır ortada, diğerleri üstte/altta).
+import { getLang, switchPath, useT, type Lang } from '../i18n';
+
+const lang = getLang(Astro.url);
+const t = useT(lang);
+const items: { code: Lang; name: string; href: string }[] = [
+  { code: 'tr', name: 'Türkçe', href: switchPath(Astro.url, 'tr') },
+  { code: 'en', name: 'English', href: switchPath(Astro.url, 'en') },
+];
+const current = items.find((i) => i.code === lang)!;
+
+const FLAGS: Record<Lang, string> = {
+  tr: '<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#E30A17"/><circle cx="11.5" cy="10" r="5" fill="#fff"/><circle cx="12.8" cy="10" r="4" fill="#E30A17"/><polygon fill="#fff" points="16.2,10 19.9,8.8 17.6,11.9 17.6,8.1 19.9,11.2"/></svg>',
+  en: '<svg viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice"><rect width="60" height="30" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" stroke="#C8102E" stroke-width="3"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>',
+};
+
+// sol kenardaki kavisli kadran çizgileri
+const ticks = Array.from({ length: 17 }, (_, i) => {
+  const y = 8 + i * 9;
+  const d = (y - 80) / 80;
+  const x = 4 + 9 * d * d;
+  const long = i % 4 === 0;
+  return { x1: x, x2: x + (long ? 7 : 4), y, o: 1 - Math.abs(d) * 0.75 };
+});
+---
+
+<div class="lp" data-current={lang} data-label-open={t('lang.label')}>
+  <button type="button" class="lp-pill" aria-haspopup="listbox" aria-expanded="false" aria-label={`${t('lang.label')}: ${current.name}`}>
+    <span class="lp-arrow" aria-hidden="true">▸</span>
+    <span class="lp-flag" set:html={FLAGS[lang]} />
+    <span class="lp-name">{current.name}</span>
+  </button>
+
+  <div class="lp-panel" role="listbox" aria-label={t('lang.label')} tabindex="-1">
+    <svg class="lp-ticks" viewBox="0 0 20 160" preserveAspectRatio="none" aria-hidden="true">
+      {ticks.map((k) => <line x1={k.x1} x2={k.x2} y1={k.y} y2={k.y} style={`opacity:${k.o}`} />)}
+    </svg>
+    <span class="lp-caret" aria-hidden="true">▸</span>
+    <ul class="lp-wheel">
+      {
+        items.map((i) => (
+          <li role="option" data-lang={i.code} data-href={i.href} aria-selected={i.code === lang ? 'true' : 'false'} tabindex="-1">
+            <span class="lp-flag" set:html={FLAGS[i.code]} />
+            <span>{i.name}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.lp').forEach((root) => {
+    const pill = root.querySelector<HTMLButtonElement>('.lp-pill')!;
+    const panel = root.querySelector<HTMLElement>('.lp-panel')!;
+    const rows = [...root.querySelectorAll<HTMLLIElement>('.lp-wheel li')];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const start = rows.findIndex((r) => r.dataset.lang === root.dataset.current);
+    let idx = start;
+    let open = false;
+    let wheelLock = 0;
+
+    // satırları tekerlek gibi diz: ortadaki düz, uzaklaştıkça eğilir ve soluklaşır
+    const layout = () => {
+      rows.forEach((r, i) => {
+        const o = i - idx;
+        r.style.transform = `translateY(calc(-50% + ${o * 2.75}rem)) rotateX(${-o * 32}deg) scale(${1 - Math.abs(o) * 0.08})`;
+        r.style.opacity = String(Math.max(0, 1 - Math.abs(o) * 0.55));
+        r.classList.toggle('on', o === 0);
+        r.setAttribute('aria-selected', o === 0 ? 'true' : 'false');
+      });
+    };
+
+    const setOpen = (v: boolean) => {
+      open = v;
+      root.classList.toggle('open', v);
+      pill.setAttribute('aria-expanded', String(v));
+      if (v) {
+        idx = start;
+        layout();
+        // kart hapın ortasına göre açılır; ekran kenarına taşarsa içeri kaydır
+        const pr = pill.getBoundingClientRect();
+        const h = panel.offsetHeight;
+        const top = pr.top + pr.height / 2 - h / 2;
+        const shift = top < 8 ? 8 - top : top + h > window.innerHeight - 8 ? window.innerHeight - 8 - (top + h) : 0;
+        panel.style.marginTop = `${shift}px`;
+        panel.focus({ preventScroll: true });
+      } else {
+        pill.focus({ preventScroll: true });
+      }
+    };
+
+    const choose = (i: number) => {
+      idx = i;
+      layout();
+      const target = rows[i];
+      if (target.dataset.lang === root.dataset.current) {
+        setTimeout(() => setOpen(false), reduce ? 0 : 180);
+        return;
+      }
+      setTimeout(() => (window.location.href = target.dataset.href!), reduce ? 0 : 320);
+    };
+
+    const move = (d: number) => {
+      const n = Math.min(rows.length - 1, Math.max(0, idx + d));
+      if (n !== idx) {
+        idx = n;
+        layout();
+      }
+    };
+
+    pill.addEventListener('click', () => setOpen(!open));
+    rows.forEach((r, i) => r.addEventListener('click', () => choose(i)));
+
+    panel.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        const now = Date.now();
+        if (now - wheelLock < 180) return;
+        wheelLock = now;
+        move(e.deltaY > 0 ? 1 : -1);
+      },
+      { passive: false },
+    );
+
+    // dokunmatikte yukarı/aşağı kaydırma
+    let ty: number | null = null;
+    panel.addEventListener('touchstart', (e) => (ty = e.touches[0].clientY), { passive: true });
+    panel.addEventListener(
+      'touchmove',
+      (e) => {
+        if (ty === null) return;
+        const dy = e.touches[0].clientY - ty;
+        if (Math.abs(dy) > 24) {
+          move(dy < 0 ? 1 : -1);
+          ty = e.touches[0].clientY;
+        }
+      },
+      { passive: true },
+    );
+
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(idx); }
+      else if (e.key === 'Escape') { e.preventDefault(); setOpen(false); }
+    });
+
+    document.addEventListener('pointerdown', (e) => {
+      if (open && !root.contains(e.target as Node)) setOpen(false);
+    });
+
+    layout();
+  });
+</script>
+
+<style>
+  .lp {
+    position: relative;
+    display: inline-block;
+  }
+
+  .lp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 0.38rem 0.75rem 0.38rem 0.6rem;
+    cursor: pointer;
+    transition: opacity 0.18s, border-color 0.2s;
+  }
+
+  .lp-pill:hover {
+    border-color: #3a404c;
+  }
+
+  .lp-arrow,
+  .lp-caret {
+    font-size: 0.6rem;
+    color: var(--muted);
+  }
+
+  .lp-flag {
+    display: inline-flex;
+    width: 1.25rem;
+    height: 0.85rem;
+    border-radius: 3px;
+    overflow: hidden;
+    flex: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .lp-flag :global(svg) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* açılan kart: hapın olduğu yerden büyür, aşağı inmez */
+  .lp-panel {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 11.5rem;
+    height: 9.5rem;
+    transform: translateY(-50%) scale(0.85);
+    transform-origin: right center;
+    opacity: 0;
+    pointer-events: none;
+    background: #15171d;
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    perspective: 400px;
+    overflow: hidden;
+    z-index: 30;
+    transition: opacity 0.2s, transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+    outline: none;
+  }
+
+  .lp.open .lp-panel {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+    pointer-events: auto;
+  }
+
+  .lp.open .lp-pill {
+    opacity: 0;
+  }
+
+  .lp-panel:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent), 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  .lp-ticks {
+    position: absolute;
+    left: 0.4rem;
+    top: 0;
+    width: 1.25rem;
+    height: 100%;
+  }
+
+  .lp-ticks line {
+    stroke: #4a505c;
+    stroke-width: 1.2;
+    stroke-linecap: round;
+  }
+
+  .lp-caret {
+    position: absolute;
+    left: 1.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink);
+  }
+
+  .lp-wheel {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    inset: 0 0.6rem 0 2.6rem;
+    transform-style: preserve-3d;
+  }
+
+  .lp-wheel li {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 2.4rem;
+    padding: 0 0.7rem;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.3s, background 0.2s, color 0.2s;
+    backface-visibility: hidden;
+  }
+
+  .lp-wheel li.on {
+    background: #23262e;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .lp-wheel li:hover {
+    color: var(--ink);
+  }
+
+  @media (max-width: 380px) {
+    .lp-name {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-panel,
+    .lp-wheel li,
+    .lp-pill {
+      transition: none;
+    }
+  }
+</style>

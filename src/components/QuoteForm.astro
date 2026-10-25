@@ -1,0 +1,315 @@
+---
+import { EMAIL, WEB3FORMS_KEY, REPLY_TIME } from '../consts';
+import { services as serviceData } from '../data/services';
+import { getLang, path, useT } from '../i18n';
+
+const lang = getLang(Astro.url);
+const t = useT(lang);
+const services = [...serviceData[lang].map((s) => s.title), t('form.unsure')];
+const timelines = [t('form.t1'), t('form.t2'), t('form.t3'), t('form.t4')];
+const msg = {
+  sending: t('form.sending'),
+  submit: t('form.submit'),
+  ok: t('form.ok'),
+  err: t('form.err'),
+  notReady: t('form.notReady'),
+};
+---
+
+<form class="quote" id="quote-form" data-key={WEB3FORMS_KEY} data-msg={JSON.stringify(msg)} novalidate>
+  <input type="hidden" name="subject" value={t('form.subject')} />
+  <input type="hidden" name="language" value={lang} />
+  <input type="hidden" name="from_name" value="codeba.dev" />
+  <!-- bot tuzağı: insanlar görmez, botlar doldurur -->
+  <input type="checkbox" name="botcheck" class="trap" tabindex="-1" autocomplete="off" />
+
+  <div class="row two">
+    <label for="q-name">
+      <span>{t('form.name')}</span>
+      <input id="q-name" name="name" type="text" autocomplete="name" required />
+    </label>
+    <label for="q-email">
+      <span>{t('form.email')}</span>
+      <input id="q-email" name="email" type="email" autocomplete="email" required />
+    </label>
+  </div>
+
+  <fieldset class="row">
+    <legend>{t('form.service')}</legend>
+    <div class="chips">
+      {
+        services.map((s, i) => (
+          <label class="chip" for={`q-s${i}`}>
+            <input id={`q-s${i}`} type="radio" name="service" value={s} required checked={i === 0} />
+            <span>{s}</span>
+          </label>
+        ))
+      }
+    </div>
+  </fieldset>
+
+  <label class="row" for="q-time">
+    <span>{t('form.timeline')}</span>
+    <select id="q-time" name="timeline">
+      {timelines.map((t) => <option value={t}>{t}</option>)}
+    </select>
+  </label>
+
+  <label class="row" for="q-msg">
+    <span>{t('form.message')}</span>
+    <textarea
+      id="q-msg"
+      name="message"
+      rows="5"
+      required
+      placeholder={t('form.placeholder')}
+    ></textarea>
+  </label>
+
+  <label class="consent" for="q-kvkk">
+    <input id="q-kvkk" name="kvkk" type="checkbox" value="onaylandı" required />
+    <span>
+      <a href={path('privacy', lang)} target="_blank">{t('form.consent.link')}</a> {t('form.consent.rest')}
+    </span>
+  </label>
+
+  <div class="submit-row">
+    <button type="submit" class="btn">{t('form.submit')}</button>
+    <p class="note mono">{t('form.note').replace('{time}', REPLY_TIME[lang])}</p>
+  </div>
+
+  <p class="status" role="status" aria-live="polite" hidden></p>
+  <p class="fallback muted" hidden>
+    {t('form.fallback')} <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+  </p>
+</form>
+
+<script>
+  const form = document.getElementById('quote-form') as HTMLFormElement | null;
+  if (form) {
+    const status = form.querySelector<HTMLElement>('.status')!;
+    const fallback = form.querySelector<HTMLElement>('.fallback')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const key = form.dataset.key || '';
+    const m = JSON.parse(form.dataset.msg || '{}');
+    const configured = key && !key.startsWith('BURAYA');
+
+    const show = (msg: string, kind: 'ok' | 'err') => {
+      status.textContent = msg;
+      status.dataset.kind = kind;
+      status.hidden = false;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      if (!configured) {
+        show(m.notReady, 'err');
+        fallback.hidden = false;
+        return;
+      }
+      const data = Object.fromEntries(new FormData(form));
+      button.disabled = true;
+      button.textContent = m.sending;
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ ...data, access_key: key }),
+        });
+        const json = await res.json();
+        if (!json.success) throw new Error(json.message);
+        form.reset();
+        show(m.ok, 'ok');
+      } catch {
+        show(m.err, 'err');
+        fallback.hidden = false;
+      } finally {
+        button.disabled = false;
+        button.textContent = m.submit;
+      }
+    });
+  }
+</script>
+
+<style>
+  .quote {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    background: var(--surface);
+  }
+
+  .row {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .row.two {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 1.25rem;
+  }
+
+  .row.two label {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  label > span,
+  legend {
+    font-size: 0.88rem;
+    color: var(--soft);
+    padding: 0;
+  }
+
+  legend {
+    margin-bottom: 0.45rem;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  select,
+  textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    transition: border-color 0.2s;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.2);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip span {
+    display: inline-block;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--soft);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+
+  .chip span:hover {
+    border-color: #3a404c;
+  }
+
+  .chip input:checked + span {
+    background: rgba(79, 140, 255, 0.14);
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .chip input:focus-visible + span {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .consent {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .consent input {
+    margin-top: 0.2rem;
+    accent-color: var(--accent);
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+  }
+
+  .submit-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .submit-row .btn {
+    cursor: pointer;
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+  }
+
+  .submit-row .btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .note {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .status {
+    margin: 0;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
+  }
+
+  .status[data-kind='ok'] {
+    background: rgba(62, 207, 142, 0.12);
+    color: #7ee2b4;
+  }
+
+  .status[data-kind='err'] {
+    background: rgba(255, 99, 99, 0.1);
+    color: #ff9b9b;
+  }
+
+  .fallback {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .trap {
+    position: absolute;
+    left: -9999px;
+  }
+</style>

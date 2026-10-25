@@ -1,0 +1,132 @@
+---
+import LogoMark from './LogoMark.astro';
+import { EMAIL, GITHUB, LINKEDIN } from '../consts';
+import { getCollection } from 'astro:content';
+import { getLang, path, useT } from '../i18n';
+
+const lang = getLang(Astro.url);
+const t = useT(lang);
+const year = new Date().getFullYear();
+const hasPosts = (await getCollection('yazilar', ({ data }) => !data.draft)).length > 0;
+---
+
+<footer class="site-footer">
+  <div class="container top">
+    <div class="brand">
+      <a href={path('home', lang)} class="logo" aria-label={t('nav.home')}><LogoMark size={28} /><span>codeba</span></a>
+      <p class="muted">{t('footer.tagline')}</p>
+    </div>
+    <nav class="cols" aria-label={t('footer.aria')}>
+      <div>
+        <span class="mono">{t('footer.site')}</span>
+        <a href={path('works', lang)}>{t('nav.works')}</a>
+        {lang === 'tr' && hasPosts && <a href="/yazilar/">{t('nav.blog')}</a>}
+        <a href={path('about', lang)}>{t('nav.about')}</a>
+      </div>
+      <div>
+        <span class="mono">{t('footer.contact')}</span>
+        <a href={path('contact', lang)}>{t('nav.cta')}</a>
+        <a href={`mailto:${EMAIL}`}>{t('footer.email')}</a>
+        <a href={LINKEDIN}>LinkedIn</a>
+        <a href={GITHUB}>GitHub</a>
+      </div>
+    </nav>
+  </div>
+  <div class="container bottom mono">
+    <span>© {year} codeba · Burak Avcı</span>
+    <span class="links">
+      <a href={path('privacy', lang)}>{t('footer.privacy')}</a>
+      {lang === 'tr' && hasPosts && <a href="/rss.xml">RSS</a>}
+    </span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 7rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem 3rem;
+    padding-block: 3rem 2rem;
+  }
+
+  .brand {
+    max-width: 20rem;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+  }
+
+  .brand p {
+    font-size: 0.92rem;
+    margin: 0;
+  }
+
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 4rem;
+  }
+
+  .cols div {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+
+  .cols .mono {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .cols a {
+    color: var(--soft);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+
+  .cols a:hover {
+    color: var(--ink);
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    padding-block: 1.25rem 2rem;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+  }
+
+  .links {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .bottom a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .bottom a:hover {
+    color: var(--ink);
+  }
+</style>

@@ -1,0 +1,173 @@
+---
+import type { Project } from '../data/projects';
+import { getLang, useT } from '../i18n';
+
+interface Props {
+  project: Project;
+}
+
+const { project: p } = Astro.props;
+const lang = getLang(Astro.url);
+const t = useT(lang);
+const cat = t(`cat.${p.category}` as const);
+const linked = p.link && p.live !== false;
+const soon = lang === 'tr' ? 'Yakında yayında' : 'Coming soon';
+const visit = lang === 'tr' ? 'Siteyi aç' : 'Visit site';
+---
+
+<article class="card reveal" data-category={p.category} data-tilt>
+  <div class="media">
+    {p.live === false && <span class="soon"><span class="soon-dot"></span>{soon}</span>}
+    {
+      p.media?.type === 'video' ? (
+        <video src={p.media.src} poster={p.media.poster} autoplay muted loop playsinline preload="metadata" />
+      ) : p.media?.type === 'image' ? (
+        <img src={p.media.src} alt={p.media.alt} loading="lazy" />
+      ) : (
+        <div class="placeholder">
+          <span>{p.name}</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="body">
+    <p class="meta">{cat} · {p.stack.join(' / ')}</p>
+    <h3>{linked ? <a href={p.link} target="_blank" rel="noopener">{p.name}</a> : p.name}</h3>
+    <p class="summary">{p.summary[lang]}</p>
+    {linked && <a class="visit" href={p.link} target="_blank" rel="noopener">{visit} ↗</a>}
+  </div>
+</article>
+
+<style>
+  .card {
+    --rx: 0deg;
+    --ry: 0deg;
+    --gx: 50%;
+    --gy: 50%;
+    position: relative;
+    min-width: 0;
+    padding: 0.75rem;
+    border-radius: 18px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+    transition: transform 0.25s ease-out, border-color 0.25s;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(400px circle at var(--gx) var(--gy), rgba(79, 140, 255, 0.14), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .card:hover {
+    border-color: #343a46;
+  }
+
+  .card:hover::after {
+    opacity: 1;
+  }
+
+  .soon {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: #ffd27a;
+    background: rgba(10, 11, 14, 0.75);
+    border: 1px solid rgba(255, 196, 80, 0.35);
+    border-radius: 999px;
+    padding: 0.25rem 0.65rem;
+    backdrop-filter: blur(6px);
+  }
+
+  .soon-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: #ffb547;
+  }
+
+  .visit {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+
+  .media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    max-width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-2);
+    transform: translateZ(30px);
+  }
+
+  .media video,
+  .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .placeholder {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(79, 140, 255, 0.35), transparent 55%),
+      radial-gradient(circle at 80% 90%, rgba(79, 140, 255, 0.12), transparent 50%),
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 22px 22px,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 22px 22px,
+      var(--bg-2);
+  }
+
+  .placeholder span {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+  }
+
+  .body {
+    padding: 1.1rem 0.5rem 0.5rem;
+    transform: translateZ(18px);
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.4rem;
+  }
+
+  h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .summary {
+    margin: 0;
+    font-size: 0.97rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+</style>

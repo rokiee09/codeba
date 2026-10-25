@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { projects } from '../data/projects';
+import { useT, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const categories = [...new Set(projects.map((p) => p.category))];
+---
+
+<Base title={t('works.title')} description={t('works.description')} wide>
+  <div class="container">
+  <div class="prose page-head">
+    <p class="eyebrow">{t('works.eyebrow')}</p>
+    <h1>{t('works.title')}</h1>
+    <p class="muted">{t('works.text')}</p>
+  </div>
+
+  {
+    categories.length > 1 && (
+      <div class="filters" role="group" aria-label={t('works.filter')}>
+        <button type="button" data-filter="all" aria-pressed="true">{t('works.all')}</button>
+        {categories.map((c) => (
+          <button type="button" data-filter={c} aria-pressed="false">
+            {t(`cat.${c}` as const)}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="grid">
+    {projects.map((p) => <WorkCard project={p} />)}
+  </div>
+  </div>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-category]');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      cards.forEach((card) => {
+        card.hidden = f !== 'all' && card.dataset.category !== f;
+      });
+    });
+  });
+</script>
+
+<style>
+  .page-head {
+    padding-top: 4.5rem;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 2rem;
+  }
+
+  .filters button {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+  }
+
+  .filters button:hover {
+    color: var(--ink);
+  }
+
+  .filters button[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  .filters button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: 1.75rem;
+  }
+</style>

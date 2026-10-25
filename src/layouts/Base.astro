@@ -1,0 +1,102 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { getLang, useT, switchPath, hasAlternate } from '../i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  wide?: boolean;
+}
+
+const lang = getLang(Astro.url);
+const t = useT(lang);
+const { title, description = t('meta.description'), wide = false } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${t('meta.suffix')}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+// iki dilde karşılığı olan sayfalar için arama motorlarına diğer dili göster
+const alternates = hasAlternate(Astro.url)
+  ? [
+      { lang: 'tr', href: new URL(switchPath(Astro.url, 'tr'), Astro.site) },
+      { lang: 'en', href: new URL(switchPath(Astro.url, 'en'), Astro.site) },
+      { lang: 'x-default', href: new URL(switchPath(Astro.url, 'tr'), Astro.site) },
+    ]
+  : [];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0b0e" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'tr' ? 'tr_TR' : 'en_US'} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL(lang === 'tr' ? '/og.png' : '/og-en.png', Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <Header />
+    {
+      wide ? (
+        <main class="wide">
+          <slot />
+        </main>
+      ) : (
+        <main class="narrow container">
+          <slot />
+        </main>
+      )
+    }
+    <Footer />
+
+    <script>
+      // [data-tilt] olan kartlar fareyle hafifçe 3D eğilir
+      const fine = window.matchMedia('(pointer: fine)').matches;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (fine && !reduce) {
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+          el.addEventListener('pointermove', (e) => {
+            const r = el.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            el.style.setProperty('--ry', `${px * 10}deg`);
+            el.style.setProperty('--rx', `${-py * 10}deg`);
+            el.style.setProperty('--gx', `${(px + 0.5) * 100}%`);
+            el.style.setProperty('--gy', `${(py + 0.5) * 100}%`);
+          });
+          el.addEventListener('pointerleave', () => {
+            el.style.setProperty('--rx', '0deg');
+            el.style.setProperty('--ry', '0deg');
+          });
+        });
+      }
+      if (reduce) {
+        document.querySelectorAll('video[autoplay]').forEach((v) => (v as HTMLVideoElement).pause());
+      }
+    </script>
+  </body>
+</html>

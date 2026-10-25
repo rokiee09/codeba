@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import { EMAIL } from '../consts';
+import type { Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+{
+  lang === 'tr' ? (
+<Base title="Gizlilik ve KVKK" description="Kişisel verilerin işlenmesine ilişkin aydınlatma metni.">
+  <article class="legal">
+    <p class="eyebrow">Yasal</p>
+    <h1>Gizlilik ve KVKK aydınlatma metni</h1>
+    <p class="muted mono">Son güncelleme: Ekim 2026</p>
+
+    <p>
+      Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun ("KVKK") 10. maddesi uyarınca,
+      codeba.dev üzerinden paylaştığınız kişisel verilerin nasıl işlendiğini açıklar.
+    </p>
+
+    <h2>Veri sorumlusu</h2>
+    <p>Burak Avcı · <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+
+    <h2>Hangi verileri topluyorum?</h2>
+    <p>
+      Yalnızca iletişim formunda kendi isteğinizle yazdığınız bilgileri: adınız, e-posta adresiniz, seçtiğiniz
+      konu ve süre, mesajınız. Sitede çerez kullanan bir reklam veya takip aracı yoktur.
+    </p>
+
+    <h2>Neden işliyorum?</h2>
+    <p>
+      Mesajınızı okumak ve size e-postayla dönüş yapmak için. Hukuki sebep, formda verdiğiniz açık
+      rızadır (KVKK md. 5/1).
+    </p>
+
+    <h2>Kimlere aktarılıyor?</h2>
+    <p>
+      Form, mesajınızı bana e-postayla iletmek için Web3Forms hizmetini kullanır. Bu hizmetin sunucuları
+      yurt dışında olabileceğinden, aktarım KVKK md. 9 kapsamında formdaki açık rızanıza dayanır. Site
+      Vercel üzerinde barındırılır, yazı tipleri Google Fonts'tan yüklenir; bu hizmetler teknik olarak IP
+      adresinizi görebilir. Verileriniz bunların dışında kimseyle paylaşılmaz, satılmaz.
+    </p>
+
+    <h2>Ne kadar saklanıyor?</h2>
+    <p>
+      Talebiniz bir işe dönüşmezse yazışma en geç 1 yıl içinde silinir. İşe dönüşürse, iş ilişkisi ve
+      yasal saklama süreleri boyunca saklanır.
+    </p>
+
+    <h2>Haklarınız</h2>
+    <p>
+      KVKK md. 11 uyarınca verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini veya silinmesini
+      isteme, aktarıldığı yerleri öğrenme ve itiraz etme haklarına sahipsiniz. Talepleriniz için
+      <a href={`mailto:${EMAIL}`}>{EMAIL}</a> adresine yazabilirsiniz; en geç 30 gün içinde yanıtlanır.
+    </p>
+  </article>
+</Base>
+  ) : (
+<Base title="Privacy" description="How personal data shared through this site is handled.">
+  <article class="legal">
+    <p class="eyebrow">Legal</p>
+    <h1>Privacy notice</h1>
+    <p class="muted mono">Last updated: October 2026</p>
+
+    <p>
+      This notice explains how personal data you share through codeba.dev is processed, in line with
+      Article 10 of the Turkish Personal Data Protection Law No. 6698 ("KVKK").
+    </p>
+
+    <h2>Data controller</h2>
+    <p>Burak Avcı · <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
+
+    <h2>What I collect</h2>
+    <p>
+      Only what you choose to write in the contact form: your name, email address, the topic and timeline
+      you pick, and your message. The site uses no advertising or tracking cookies.
+    </p>
+
+    <h2>Why I process it</h2>
+    <p>
+      To read your message and reply by email. The legal basis is the explicit consent you give in the
+      form (KVKK Art. 5/1).
+    </p>
+
+    <h2>Who receives it</h2>
+    <p>
+      The form uses the Web3Forms service to deliver your message to my inbox. Its servers may be located
+      outside Turkey, so this transfer relies on your explicit consent under KVKK Art. 9. The site is
+      hosted on Vercel and fonts load from Google Fonts; these services can technically see your IP
+      address. Your data is not shared with anyone else or sold.
+    </p>
+
+    <h2>How long I keep it</h2>
+    <p>
+      If your request does not turn into a project, the correspondence is deleted within one year at the
+      latest. If it does, it is kept for the duration of the work and any legally required retention period.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>
+      Under KVKK Art. 11 you can ask whether your data is processed, request that it be corrected or
+      deleted, learn who it was shared with, and object to its processing. Email
+      <a href={`mailto:${EMAIL}`}>{EMAIL}</a>; requests are answered within 30 days at the latest.
+    </p>
+  </article>
+</Base>
+  )
+}
+
+<style>
+  .legal h2 {
+    font-size: 1.15rem;
+    margin: 2.25rem 0 0.6rem;
+  }
+
+  .legal p {
+    color: var(--soft);
+  }
+</style>

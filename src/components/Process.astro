@@ -1,0 +1,126 @@
+---
+// Süreç: her adımın yanında o aşamanın küçük bir ekran taklidi
+import { steps } from '../data/services';
+import { getLang, useT } from '../i18n';
+const lang = getLang(Astro.url);
+const t = useT(lang);
+---
+
+<ol class="process">
+  <li class="pcard reveal">
+    <div class="ui ui-mail" aria-hidden="true">
+      <div class="mail-head"><span class="mail-dot"></span><b>{t('process.ui.request')}</b><span class="mail-time">09:41</span></div>
+      <div class="mail-row"><span>{t('process.ui.service')}</span><em>{t('process.ui.serviceVal')}</em></div>
+      <div class="mail-row"><span>{t('process.ui.time')}</span><em>{t('process.ui.timeVal')}</em></div>
+      <div class="sk w90"></div><div class="sk w70"></div><div class="sk w80"></div>
+      <span class="mail-btn">{t('process.ui.reply')} →</span>
+    </div>
+    <div class="ptext"><span class="pnum">1.0</span><h3>{t('process.s1')}</h3><p>{steps[lang][0]}</p></div>
+  </li>
+  <li class="pcard reveal">
+    <div class="ui ui-design" aria-hidden="true">
+      <div class="canvas-grid"></div>
+      <div class="frame">
+        <span class="frame-label">{t('process.ui.frame')}</span>
+        <div class="fb fb-head"></div>
+        <div class="fb fb-hero sel"><i class="h tl"></i><i class="h tr"></i><i class="h bl"></i><i class="h br"></i></div>
+        <div class="fb-row"><div class="fb"></div><div class="fb"></div></div>
+        <div class="fb fb-btn"></div>
+      </div>
+      <svg class="cursor" viewBox="0 0 16 16"><path d="M2 1l11 6.5-5 1.2-2.4 4.8z"/></svg>
+    </div>
+    <div class="ptext"><span class="pnum">2.0</span><h3>{t('process.s2')}</h3><p>{steps[lang][1]}</p></div>
+  </li>
+  <li class="pcard reveal">
+    <div class="ui ui-code" aria-hidden="true">
+      <div class="editor">
+        <div class="ln"><i class="k w20"></i><i class="t w35"></i></div>
+        <div class="ln in1"><i class="p w25"></i><i class="s w30"></i></div>
+        <div class="ln in1"><i class="k w15"></i><i class="t w40"></i></div>
+        <div class="ln in2"><i class="p w45"></i></div>
+        <div class="ln in2"><i class="t w30"></i><i class="p w15"></i></div>
+        <div class="ln in1"><i class="p w10"></i><span class="caret"></span></div>
+      </div>
+      <div class="mini-phone"><span class="mp-label">{t('process.ui.preview')}</span><div class="mp-bar"></div><div class="mp-card"></div><div class="mp-line"></div><div class="mp-line s"></div><div class="mp-btn"></div></div>
+    </div>
+    <div class="ptext"><span class="pnum">3.0</span><h3>{t('process.s3')}</h3><p>{steps[lang][2]}</p></div>
+  </li>
+  <li class="pcard reveal">
+    <div class="ui ui-live" aria-hidden="true">
+      <div class="url"><svg viewBox="0 0 16 16"><rect x="3.5" y="7" width="9" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg><span>codeba.dev</span><b class="live"><span class="live-dot"></span>{t('process.ui.live')}</b></div>
+      <ul class="checks">
+        <li><span class="ck">✓</span>{t('process.ui.c1')}</li>
+        <li><span class="ck">✓</span>{t('process.ui.c2')}</li>
+        <li><span class="ck">✓</span>{t('process.ui.c3')}</li>
+      </ul>
+    </div>
+    <div class="ptext"><span class="pnum">4.0</span><h3>{t('process.s4')}</h3><p>{steps[lang][3]}</p></div>
+  </li>
+</ol>
+
+<style>
+  .process { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 1.25rem; }
+  .pcard { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--rule); border-radius: 18px; background: var(--surface); overflow: hidden; transition: border-color .25s; }
+  .pcard:hover { border-color: #343a46; }
+  .ptext { padding: 1.25rem 1.4rem 1.5rem; }
+  .pnum { display: inline-block; font-family: var(--mono); font-size: .75rem; color: var(--accent); border: 1px solid rgba(79,140,255,.4); border-radius: 999px; padding: .1rem .55rem; margin-bottom: .8rem; }
+  .ptext h3 { font-size: 1.2rem; margin: 0 0 .4rem; }
+  .ptext p { margin: 0; color: var(--muted); font-size: .97rem; }
+  .ui { position: relative; height: 12.5rem; overflow: hidden; border-bottom: 1px solid var(--rule); padding: 1.25rem 1.4rem;
+    background: radial-gradient(ellipse at 30% 0%, rgba(79,140,255,.10), transparent 60%), var(--bg-2); font-size: .78rem; color: var(--soft); }
+  .sk { height: .5rem; border-radius: 4px; background: #232733; margin-top: .45rem; }
+  .w90 { width: 90%; } .w80 { width: 80%; } .w70 { width: 70%; }
+  /* 1.0 e-posta */
+  .ui-mail { display: flex; flex-direction: column; gap: .15rem; }
+  .mail-head { display: flex; align-items: center; gap: .5rem; padding-bottom: .55rem; margin-bottom: .35rem; border-bottom: 1px solid var(--rule); }
+  .mail-head b { font-weight: 600; color: var(--ink); font-size: .85rem; }
+  .mail-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(79,140,255,.18); }
+  .mail-time { margin-left: auto; font-family: var(--mono); color: var(--muted); font-size: .7rem; }
+  .mail-row { display: flex; gap: .6rem; font-size: .76rem; }
+  .mail-row span { color: var(--muted); min-width: 4.2rem; }
+  .mail-row em { font-style: normal; color: var(--ink); }
+  .mail-btn { align-self: flex-start; margin-top: auto; font-family: var(--mono); font-size: .7rem; color: #fff; background: var(--accent); border-radius: 999px; padding: .3rem .75rem; }
+  /* 2.0 tasarım */
+  .ui-design { display: grid; place-items: center; }
+  .canvas-grid { position: absolute; inset: 0; background: radial-gradient(circle, #262b36 1px, transparent 1.2px) 0 0 / 14px 14px; opacity: .8; }
+  .frame { position: relative; width: 7.2rem; height: 10.3rem; border-radius: 12px; background: var(--bg); border: 1px solid #2c313c; padding: .55rem; display: flex; flex-direction: column; gap: .4rem; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+  .frame-label { position: absolute; top: -1.15rem; left: 0; font-family: var(--mono); font-size: .62rem; color: var(--muted); white-space: nowrap; }
+  .fb { background: #1f2430; border-radius: 4px; }
+  .fb-head { height: .55rem; width: 55%; }
+  .fb-hero { position: relative; height: 3.4rem; background: #1b2a4a; }
+  .fb-row { display: flex; gap: .4rem; } .fb-row .fb { flex: 1; height: 2rem; }
+  .fb-btn { height: .9rem; margin-top: auto; background: rgba(79,140,255,.55); border-radius: 999px; }
+  .sel { outline: 1.5px solid var(--accent); outline-offset: 2px; animation: selpulse 2.4s ease-in-out infinite; }
+  .h { position: absolute; width: 6px; height: 6px; background: #fff; border: 1.5px solid var(--accent); border-radius: 1px; }
+  .tl { top: -5px; left: -5px; } .tr { top: -5px; right: -5px; } .bl { bottom: -5px; left: -5px; } .br { bottom: -5px; right: -5px; }
+  .cursor { position: absolute; width: 1.1rem; height: 1.1rem; left: calc(50% + 2.4rem); top: 4.6rem; fill: #fff; stroke: #0a0b0e; stroke-width: 1; animation: cur 4s ease-in-out infinite; }
+  @keyframes cur { 0%,100% { transform: translate(0,0); } 45% { transform: translate(-1.6rem,-1.2rem); } 60% { transform: translate(-1.6rem,-1.2rem) scale(.9); } }
+  @keyframes selpulse { 50% { outline-color: rgba(79,140,255,.45); } }
+  /* 3.0 kod */
+  .ui-code { display: flex; gap: 1rem; align-items: center; }
+  .editor { flex: 1; min-width: 0; display: grid; gap: .55rem; padding: .9rem; border-radius: 10px; background: #0d0f14; border: 1px solid var(--rule); }
+  .ln { display: flex; gap: .35rem; align-items: center; height: .5rem; }
+  .ln i { display: block; height: .5rem; border-radius: 3px; }
+  .in1 { padding-left: .8rem; } .in2 { padding-left: 1.6rem; }
+  .k { background: #c792ea; } .t { background: #82aaff; } .s { background: #c3e88d; } .p { background: #4a5160; }
+  .w10 { width: 10%; } .w15 { width: 15%; } .w20 { width: 20%; } .w25 { width: 25%; } .w30 { width: 30%; } .w35 { width: 35%; } .w40 { width: 40%; } .w45 { width: 45%; }
+  .caret { width: 2px; height: .8rem; background: var(--accent); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .mini-phone { position: relative; flex: none; width: 4.6rem; height: 8.6rem; border-radius: 12px; border: 3px solid var(--accent); background: #0d0f14; padding: .45rem .4rem; display: flex; flex-direction: column; gap: .3rem; }
+  .mp-label { position: absolute; top: -1.3rem; left: 0; font-family: var(--mono); font-size: .62rem; color: var(--muted); }
+  .mp-bar { height: .35rem; width: 50%; background: #c4c8d0; border-radius: 2px; }
+  .mp-card { height: 2.4rem; background: #1b2a4a; border-radius: 5px; }
+  .mp-line { height: .35rem; background: #2a303c; border-radius: 2px; } .mp-line.s { width: 65%; }
+  .mp-btn { margin-top: auto; height: .75rem; background: var(--accent); border-radius: 999px; }
+  /* 4.0 yayın */
+  .ui-live { display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+  .url { display: flex; align-items: center; gap: .5rem; padding: .55rem .75rem; border-radius: 999px; background: #0d0f14; border: 1px solid var(--rule); font-family: var(--mono); color: var(--ink); }
+  .url svg { width: .95rem; height: .95rem; fill: none; stroke: #3ecf8e; stroke-width: 1.5; flex: none; }
+  .live { margin-left: auto; display: inline-flex; align-items: center; gap: .35rem; font-weight: 500; font-size: .68rem; color: #7ee2b4; background: rgba(62,207,142,.12); padding: .2rem .55rem; border-radius: 999px; }
+  .live-dot { width: .4rem; height: .4rem; border-radius: 50%; background: #3ecf8e; animation: livep 2s infinite; }
+  @keyframes livep { 50% { opacity: .35; } }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+  .checks li { display: flex; align-items: center; gap: .55rem; color: var(--soft); }
+  .ck { display: inline-grid; place-items: center; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: rgba(79,140,255,.18); color: var(--accent); font-size: .65rem; }
+  @media (prefers-reduced-motion: reduce) { .cursor, .sel, .caret, .live-dot { animation: none !important; } }
+</style>

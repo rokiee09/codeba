@@ -1,0 +1,16 @@
+---
+// codeba işareti: sağa açık laptop ekranı ("c") + açıklığı tamamlayan mavi telefon
+interface Props {
+  size?: number;
+}
+const { size = 30 } = Astro.props;
+---
+
+<svg
+  class="logo-mark"
+  viewBox="0 0 62 51"
+  width={size}
+  height={(size * 51) / 62}
+  aria-hidden="true"
+  set:html={`<path d="M37 5H11a6.5 6.5 0 0 0-6.5 6.5v17A6.5 6.5 0 0 0 11 35h26" fill="none" stroke="#eceef2" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M2 43.5h31" fill="none" stroke="#eceef2" stroke-width="5.5" stroke-linecap="round"/> <rect x="39" y="13" width="21" height="36" rx="5.5" fill="#4f8cff"/> <rect x="42.5" y="18" width="14" height="23.5" rx="2" fill="#0a0b0e"/> <path d="M45.5 23.5h6M45.5 28h8M45.5 32.5h4.5" fill="none" stroke="#a9c6ff" stroke-width="2" stroke-linecap="round"/> <circle cx="49.5" cy="45" r="1.4" fill="#0a0b0e"/>`}
+/>
