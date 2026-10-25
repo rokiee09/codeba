@@ -1,5 +1,5 @@
 ---
-// Mobil uygulama vitrini: telefonda örnek bir uygulama ekranı kendiliğinden kurulur
+
 import { getLang, useT } from '../i18n';
 const lang = getLang(Astro.url);
 const t = useT(lang);
@@ -22,7 +22,7 @@ const DONE = [true, true, true, true, true, false, false];
     </div>
     <div class="app-stage">
       <span class="app-badge">{t('app.badge')}</span>
-      <div class="phone" role="img" aria-label={t('app.aria')} data-locale="{lang === 'tr' ? 'tr-TR' : 'en-US'}">
+      <div class="phone" role="img" aria-label={t('app.aria')} data-locale={lang === 'tr' ? 'tr-TR' : 'en-US'}>
         <div class="island"></div>
         <div class="screen">
           <div class="sbar"><span>9:41</span><span class="sicons"><i></i><i></i><i class="bat"></i></span></div>
