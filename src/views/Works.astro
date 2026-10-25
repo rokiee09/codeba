@@ -11,9 +11,33 @@ const { lang } = Astro.props;
 const t = useT(lang);
 
 const categories = [...new Set(projects.map((p) => p.category))];
+
+// arama motorları için proje listesi (yapılandırılmış veri)
+const site = Astro.site!;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: t('works.title'),
+  itemListElement: projects.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': p.category === 'web' ? 'WebSite' : 'SoftwareApplication',
+      name: p.name,
+      description: p.summary[lang],
+      ...(p.category !== 'web' && {
+        applicationCategory: p.category === 'mobile' ? 'MobileApplication' : 'DesktopApplication',
+        operatingSystem: p.category === 'mobile' ? 'Android, iOS' : 'Windows',
+      }),
+      ...(p.link && p.live !== false && { url: p.link }),
+      ...(p.media?.type === 'image' && { image: new URL(p.media.src, site).href }),
+      author: { '@id': new URL('/#burak', site).href },
+    },
+  })),
+};
 ---
 
-<Base title={t('works.title')} description={t('works.description')} wide>
+<Base title={t('works.metaTitle')} description={t('works.description')} schema={schema} wide>
   <div class="container">
   <div class="prose page-head">
     <p class="eyebrow">{t('works.eyebrow')}</p>

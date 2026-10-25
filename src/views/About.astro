@@ -12,14 +12,9 @@ const certTech = [
   'React', 'React Native', 'Expo', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'Sass',
   'Bootstrap', 'Zustand', 'React Hook Form', 'Figma', 'Postman', 'GitHub', 'VS Code',
 ];
-const stats = [
-  { n: '832', k: 'about.certS1' },
-  { n: '14', k: 'about.certS2' },
-  { n: '23', k: 'about.certS3' },
-];
 ---
 
-<Base title={t('about.title')}>
+<Base title={t('about.metaTitle')} description={t('about.description')}>
   <p class="eyebrow">codeba</p>
   <h1>{t('about.title')}</h1>
   <p>{t('about.p1')}</p>
@@ -39,16 +34,6 @@ const stats = [
     </header>
 
     <p class="cert-text">{t('about.certText')}</p>
-
-    <dl class="stats">
-      {stats.map((s) => (
-        <div>
-          <dt class="mono">{s.n}</dt>
-          <dd>{t(s.k as any)}</dd>
-        </div>
-      ))}
-    </dl>
-    <p class="break mono">{t('about.certBreak')}</p>
 
     <p class="tech-label mono">{t('about.certTech')}</p>
     <ul class="tech">
@@ -128,39 +113,7 @@ const stats = [
   }
 
   .cert-text {
-    margin: 1rem 0 1.1rem;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
-    margin: 0;
-  }
-
-  .stats div {
-    padding: 0.75rem 0.8rem;
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.015);
-  }
-
-  .stats dt {
-    font-size: clamp(1.4rem, 4vw, 1.8rem);
-    color: var(--ink);
-    line-height: 1.1;
-  }
-
-  .stats dd {
-    margin: 0.2rem 0 0;
-    font-size: 0.82rem;
-    color: var(--muted);
-  }
-
-  .break {
-    margin: 0.7rem 0 1.2rem;
-    font-size: 0.74rem;
-    color: var(--muted);
+    margin: 1rem 0 1.2rem;
   }
 
   .tech-label {
@@ -188,9 +141,4 @@ const stats = [
     color: var(--soft);
   }
 
-  @media (max-width: 420px) {
-    .stats dd {
-      font-size: 0.74rem;
-    }
-  }
 </style>
