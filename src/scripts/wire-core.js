@@ -1,5 +1,4 @@
-// 404 sahnesi: çizgi (wireframe) laptop + telefon. Fareyle/parmakla sürüklenip çevrilir,
-// telefon ara ara havalanıp ekrandan çıkar ve geri döner. THREE dışarıdan verilir.
+
 export function runWire(THREE, canvas) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -7,6 +6,7 @@ export function runWire(THREE, canvas) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+  const WCAM = { y: 4.4, z: 13.6, lookY: 2.5, fit: 1.35 };
   camera.position.set(0, 4.2, 11);
   camera.lookAt(0, 0.6, 0);
 
@@ -99,9 +99,10 @@ export function runWire(THREE, canvas) {
     if (!w || !h) return;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    const fit = Math.max(1, 1.35 / camera.aspect);
-    camera.position.set(0, 4.2 * fit, 11 * fit);
-    camera.lookAt(0, 0.6, 0);
+    // model "404" yazısının altında dursun: hedefi yukarı al, kamerayı biraz geri çek
+    const fit = Math.max(1, WCAM.fit / camera.aspect);
+    camera.position.set(0, WCAM.y * fit, WCAM.z * fit);
+    camera.lookAt(0, WCAM.lookY, 0);
     camera.updateProjectionMatrix();
   }
   new ResizeObserver(resize).observe(canvas);
@@ -137,8 +138,7 @@ export function runWire(THREE, canvas) {
     }
     root.rotation.set(pitch, yaw, 0);
 
-    // telefon döngüsü: bekle → havalan → kaybol → geri gel
-    const c = t % 9;
+       const c = t % 9;
     const p = phone.position;
     if (c < 4) {
       p.copy(PHONE_HOME);
