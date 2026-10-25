@@ -1,7 +1,4 @@
-// codeba 3D sahnesi: gerçekçi laptop + telefon.
-// Aynı ekran dört aşamadan geçer: tel çerçeve → tasarım → kod → yayında.
-// Sürükleyerek çevrilir, sayfa kaydırıldıkça kamera cihazların etrafında döner.
-// THREE dışarıdan verilir; aynı kod hem sitede (npm) hem önizlemede (CDN) çalışır.
+
 export function runDevices(THREE, canvas) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const EN = canvas.dataset.lang === 'en';
@@ -15,10 +12,11 @@ export function runDevices(THREE, canvas) {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(26, 1, 0.1, 100);
-  const look = new THREE.Vector3(0.45, 1.0, 0);
+  // kamera ayarı: sahne tuvale sığsın, iki cihaz da tam görünsün
+  const CAM = { dist: 12.2, fit: 1.35, lookX: -0.05, lookY: 1.05, lookZ: 0.2 };
+  const look = new THREE.Vector3(CAM.lookX, CAM.lookY, CAM.lookZ);
 
-  // ---------- ortam yansıması: koyu bir oda + şerit ışıklar ----------
-  // Metal yüzeylerin gerçekçi görünmesini sağlayan şey, yansıttıkları bu sahte odadır.
+ 
   const pmrem = new THREE.PMREMGenerator(renderer);
   const room = new THREE.Scene();
   room.add(new THREE.Mesh(new THREE.BoxGeometry(20, 12, 20), new THREE.MeshBasicMaterial({ color: 0x0b0d12, side: THREE.BackSide })));
@@ -45,7 +43,7 @@ export function runDevices(THREE, canvas) {
   rim.position.set(6, 3, -5);
   scene.add(rim);
 
-  // ---------- yardımcılar ----------
+  
   function rrShape(w, h, r) {
     const s = new THREE.Shape();
     const x = -w / 2, y = -h / 2;
@@ -60,7 +58,7 @@ export function runDevices(THREE, canvas) {
     s.quadraticCurveTo(x, y, x + r, y);
     return s;
   }
-  // kenarları yumuşatılmış kutu (ön yüzü +z'de)
+ 
   function slab(w, h, d, r, bevel) {
     const b = bevel ?? Math.min(d * 0.45, 0.03);
     const g = new THREE.ExtrudeGeometry(rrShape(w - b * 2, h - b * 2, Math.max(0.001, r - b)), {
@@ -82,7 +80,7 @@ export function runDevices(THREE, canvas) {
     tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
     return { c, ctx: c.getContext('2d'), tex };
   }
-  // yuvarlak köşeli ShapeGeometry'nin UV'leri şekle göre değil koordinata göre; ekranlar için düz plane kullanıyoruz
+  
   const Phys = THREE.MeshPhysicalMaterial || THREE.MeshStandardMaterial;
 
   const aluminium = new Phys({ color: 0xc4c8cf, metalness: 1, roughness: 0.34, clearcoat: 0.25, clearcoatRoughness: 0.4 });
@@ -97,7 +95,7 @@ export function runDevices(THREE, canvas) {
   scene.add(root);
 
   // =====================================================================
-  // LAPTOP
+  
   // =====================================================================
   const laptop = new THREE.Group();
   laptop.position.set(-0.55, 0, 0);
@@ -110,7 +108,7 @@ export function runDevices(THREE, canvas) {
   base.position.y = BH / 2;
   laptop.add(base);
 
-  // klavye çukuru ve tuşlar
+ 
   const well = new THREE.Mesh(flat(3.7, 1.42, 0.06), new THREE.MeshStandardMaterial({ color: 0x0e1014, roughness: 0.9 }));
   well.rotation.x = -Math.PI / 2;
   well.position.set(0, BH + 0.001, -0.48);
@@ -139,7 +137,7 @@ export function runDevices(THREE, canvas) {
   pad.position.set(0, BH, 0.82);
   laptop.add(pad);
 
-  // menteşe ve kapak
+  
   const hingeBar = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 3.4, 20), new THREE.MeshStandardMaterial({ color: 0x1a1c21, metalness: 0.6, roughness: 0.5 }));
   hingeBar.rotation.z = Math.PI / 2;
   hingeBar.position.set(0, BH + 0.02, -BD / 2 + 0.05);
@@ -165,7 +163,7 @@ export function runDevices(THREE, canvas) {
   hinge.add(notch);
 
   // =====================================================================
-  // TELEFON
+ 
   // =====================================================================
   const phone = new THREE.Group();
   root.add(phone);
@@ -226,7 +224,7 @@ export function runDevices(THREE, canvas) {
   root.add(shadow);
 
   // =====================================================================
-  // EKRAN İÇERİKLERİ — 4 aşama
+ 
   // =====================================================================
   const STAGES = EN ? ['Wireframe', 'Design', 'Code', 'Live'] : ['Tel çerçeve', 'Tasarım', 'Kod', 'Yayında'];
   const SANS = "'Geist', 'Segoe UI', system-ui, sans-serif";
@@ -333,7 +331,7 @@ export function runDevices(THREE, canvas) {
     });
   }
 
-  // --- laptop: kod editörü ---
+ 
   const K = '#c792ea', T = '#82aaff', S = '#c3e88d', P = '#d7dae0', CM = '#6b7383', F = '#ffcb6b';
   const CODE = [
     [['class ', K], [EN ? 'IdeaToProduct' : 'FikirdenUrune', T], [' extends ', K], ['StatelessWidget', T], [' {', P]],
@@ -573,7 +571,7 @@ export function runDevices(THREE, canvas) {
   phPrev.height = ph.c.height;
 
   // =====================================================================
-  // ETKİLEŞİM: sürükle-çevir + kaydırma ile kamera turu
+ 
   // =====================================================================
   let dragYaw = 0, dragPitch = 0, vYaw = 0, dragging = false, lx = 0, ly = 0, hover = { x: 0, y: 0 };
   canvas.style.touchAction = 'pan-y';
@@ -625,9 +623,9 @@ export function runDevices(THREE, canvas) {
 
   function placeCamera(sp) {
     // dar alanda geri çekil; kaydırdıkça cihazların etrafında dön ve alçal
-    const fit = Math.max(1, 1.25 / aspect);
+    const fit = Math.max(1, CAM.fit / aspect);
     const orbit = -0.15 + sp * 0.9;
-    const dist = 10.2 * fit;
+    const dist = CAM.dist * fit;
     const height = 3.2 - sp * 1.6;
     camera.position.set(look.x + Math.sin(orbit) * dist, look.y + height * fit * 0.6, look.z + Math.cos(orbit) * dist);
     camera.lookAt(look);
