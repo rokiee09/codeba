@@ -31,10 +31,10 @@ export const projects: Project[] = [
       en: 'An app that brings legislation and everyday tools for field staff together in one place.',
     },
     detail: {
-      tr: 'Kanun metinleri, dilekçe ve tutanak şablonları, izin takibi gibi modüllerden oluşuyor. En çok uğraştıran kısım internet yokken de çalışması ve içeriğin güncel kalması oldu.',
-      en: 'It is built from modules such as legal texts, petition and report templates and leave tracking. The hardest parts were making it work offline and keeping the content up to date.',
+      tr: 'Mevzuat bölümü cihazda saklanıyor, internet yokken de açılıyor. Araçlar kısmında vardiya, maaş tahmini, lojman ve görev puanı, yol harcırahı gibi hesaplayıcılar var. Kişisel notlar PIN ya da biyometrik kilitli yerel bir kasada AES-256-GCM ile şifreleniyor ve hiçbir sunucuya gönderilmiyor.',
+      en: 'The legislation section is stored on the device and opens without a connection. The tools section has calculators for shifts, salary estimates, housing and duty points and travel allowance. Personal notes live in a local vault locked by PIN or biometrics, encrypted with AES-256-GCM and never sent to a server.',
     },
-    // media: { type: 'video', src: '/isler/saha-2559.mp4', poster: '/isler/saha-2559.jpg' },
+    media: { type: 'image', src: '/isler/saha-2559.jpg', alt: 'SAHA 2559: hesaplayıcılar ekranı ve PIN kilitli yerel kasa' },
     featured: true,
   },
   {
@@ -64,6 +64,7 @@ export const projects: Project[] = [
       tr: 'Şu an baktığınız site. Hızlı açılsın, bakımı kolay olsun diye özenle kurdum.',
       en: "The site you're looking at. Built with care so it loads fast and is easy to maintain.",
     },
+    media: { type: 'image', src: '/isler/codeba.jpg', alt: 'codeba.dev ana sayfası: 3D laptop ve telefon sahnesi' },
     featured: true,
   },
 ];
