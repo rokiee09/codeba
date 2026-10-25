@@ -37,9 +37,8 @@ const dragHint = lang === 'tr' ? 'Sürükleyip çevir' : 'Drag to rotate';
             <span class="w" style={`--i:${n++}`}>
               {w}
               {titleTags[i] && (
-                <span class={`ctag ${titleTags[i].color}${i > 1 ? ' extra' : ''}`} style={`--d:${i}`}>
+                <span class={`ctag ${titleTags[i].color}${i > 1 ? ' extra' : ''}`} style={`--d:${i}`} data-label={titleTags[i].label}>
                   <svg viewBox="0 0 12 12"><path d="M1 1l9.5 4-4 1.5L5 10.5z" /></svg>
-                  {titleTags[i].label}
                 </span>
               )}
             </span>
@@ -51,9 +50,8 @@ const dragHint = lang === 'tr' ? 'Sürükleyip çevir' : 'Drag to rotate';
               <span class="w" style={`--i:${n++}`}>
                 {w}
                 {subTags[i] && (
-                  <span class={`ctag ${subTags[i].color} extra`} style={`--d:${i + 5}`}>
+                  <span class={`ctag ${subTags[i].color} extra`} style={`--d:${i + 5}`} data-label={subTags[i].label}>
                     <svg viewBox="0 0 12 12"><path d="M1 1l9.5 4-4 1.5L5 10.5z" /></svg>
-                    {subTags[i].label}
                   </span>
                 )}
               </span>
@@ -321,6 +319,11 @@ const dragHint = lang === 'tr' ? 'Sürükleyip çevir' : 'Drag to rotate';
       tagIn 0.5s cubic-bezier(0.3, 1.4, 0.4, 1) both,
       tagFloat 5s ease-in-out infinite;
     animation-delay: calc(1.1s + var(--d) * 0.12s), calc(1.6s + var(--d) * 0.3s);
+  }
+
+  /* rozet yazısı CSS'ten gelir; sayfa metnine (ve Google'ın okuduğu başlığa) karışmaz */
+  .ctag::after {
+    content: attr(data-label);
   }
 
   .ctag svg {
