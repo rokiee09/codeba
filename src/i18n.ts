@@ -37,7 +37,12 @@ export function hasAlternate(url: URL) {
 export const ui = {
   tr: {
     'meta.suffix': 'uygulama ve web geliştirme',
-    'meta.description': 'Mobil uygulama, web sitesi ve küçük otomasyon işlerinde yardım. Burak Avcı.',
+    'meta.homeTitle': 'Burak Avcı · Mobil Uygulama ve Web Geliştirme | codeba',
+    'meta.jobTitle': 'Mobil ve Web Geliştirici',
+    'works.metaTitle': 'İşler: mobil, web ve masaüstü projeleri',
+    'about.metaTitle': 'Hakkımda: Burak Avcı',
+    'about.description': 'Burak Avcı kimdir: siber güvenlik geçmişi olan, Flutter, React Native, React ve Astro ile uygulama ve web sitesi geliştiren bir geliştirici.',
+    'meta.description': 'Burak Avcı · Flutter ve React Native ile Android ve iOS uygulamaları, Astro ve React ile hızlı web siteleri, Windows için masaüstü uygulamaları geliştiriyorum.',
     'nav.works': 'İşler',
     'nav.blog': 'Yazılar',
     'nav.about': 'Hakkımda',
@@ -79,10 +84,11 @@ export const ui = {
     'works.text': 'Üzerinde çalıştığım ve teslim ettiğim projeler.',
     'works.all': 'Tümü',
     'works.filter': 'Kategoriye göre filtrele',
-    'works.description': 'Yaptığım mobil uygulama, web ve otomasyon projeleri.',
+    'works.description': 'SAHA 2559 mobil uygulaması, Kitap Stüdyosu masaüstü uygulaması ve jerupath.com gibi geliştirdiğim mobil, web ve masaüstü projeleri.',
 
     'cat.mobile': 'Mobil',
     'cat.web': 'Web',
+    'cat.desktop': 'Masaüstü',
     'cat.automation': 'Otomasyon',
 
     'contact.title.meta': 'İletişim',
@@ -153,25 +159,21 @@ export const ui = {
     'app.c3': 'Paylaş',
     'about.title': 'Hakkımda',
     'about.p1':
-      'Ben Burak Avcı. Üniversitede Bilgisayar ve Öğretim Teknolojileri Öğretmenliği okudum. Yıllardır bilgisayar sistemleri, mobil cihazlar ve veriyle iç içe çalışıyorum.',
+      'Ben Burak Avcı. Pamukkale Üniversitesi’nde Bilgisayar ve Öğretim Teknolojileri Eğitimi okudum, Anadolu Üniversitesi’nde Bilgisayar Programcılığı önlisansına devam ediyorum. Yaklaşık yedi yıl siber güvenlik alanında, mobil cihaz inceleme ve veri analizi üzerine çalıştım. Bu yüzden yaptığım her uygulamada güvenliği baştan düşünürüm.',
     'about.p2':
       'Yazılıma ihtiyaçtan başladım. Bir işi üçüncü kez elle yapınca "bunu bilgisayar yapsın" diye düşünmeye başlıyorum, oradan da bir şeyler çıkıyor. codeba da bu merakın biraz büyümüş hali.',
     'about.p3':
       'Her şeyi bildiğimi iddia etmem. Bir iş bana uygun değilse bunu baştan söylerim, uygunsa sonuna kadar götürürüm.',
     'about.tools': 'Kullandıklarım',
     'about.toolsText':
-      "Flutter ve Dart, React Native ve Expo, JavaScript, TypeScript ve React, Android. Siteler için Astro ve WordPress, tasarım için Figma. Kod GitHub'da, yayın Vercel'de. Excel'le de aram iyidir.",
+      "Flutter ve Dart, React Native ve Expo, JavaScript, TypeScript ve React, Android. Siteler için Astro ve WordPress, Windows masaüstü uygulamaları için Tauri ve Rust, tasarım için Figma. Kod GitHub'da, yayın Vercel'de. Excel'le de aram iyidir.",
     'about.cta': 'İletişime geçin →',
     'about.cert': 'Sertifika',
     'about.certTitle': 'Mobile App & Frontend Developer Yetiştirme Programı',
     'about.certOrg': 'Only JavaScript',
-    'about.certDate': 'Kasım 2024 – Ağustos 2025 · 10 ay',
+    'about.certDate': 'Kasım 2024 – Ağustos 2025',
     'about.certText':
-      'Canlı dersler, mentorluk oturumları ve ödevlerle ilerleyen kapsamlı bir program. React ve React Native ağırlıklı; tasarımdan API testine kadar bir uygulamanın bütün aşamalarını kapsadı.',
-    'about.certS1': 'saat eğitim',
-    'about.certS2': 'proje',
-    'about.certS3': 'ödev',
-    'about.certBreak': '136 saat canlı ders · 598 saat mentorluk · 98 saat video',
+      'React ve React Native ağırlıklı, 10 ay süren kapsamlı bir program. Tasarımdan API testine kadar bir uygulamanın bütün aşamalarını gerçek projeler üzerinden çalıştık.',
     'about.certTech': 'Programda kullanılanlar',
 
     'footer.tagline': 'Mobil uygulama ve web geliştirme üzerine çalışmalarım.',
@@ -183,7 +185,12 @@ export const ui = {
   },
   en: {
     'meta.suffix': 'app and web development',
-    'meta.description': 'Help with mobile apps, websites and small automation projects. Burak Avcı.',
+    'meta.homeTitle': 'Burak Avcı · Mobile App and Web Development | codeba',
+    'meta.jobTitle': 'Mobile and Web Developer',
+    'works.metaTitle': 'Work: mobile, web and desktop projects',
+    'about.metaTitle': 'About Burak Avcı',
+    'about.description': 'About Burak Avcı: a developer with a cybersecurity background who builds apps and websites with Flutter, React Native, React and Astro.',
+    'meta.description': 'Burak Avcı · I build Android and iOS apps with Flutter and React Native, fast websites with Astro and React, and desktop apps for Windows.',
     'nav.works': 'Work',
     'nav.blog': 'Writing',
     'nav.about': 'About',
@@ -225,10 +232,11 @@ export const ui = {
     'works.text': "Projects I've worked on and delivered.",
     'works.all': 'All',
     'works.filter': 'Filter by category',
-    'works.description': 'Mobile app, web and automation projects I have built.',
+    'works.description': 'Mobile, web and desktop projects I have built, including the SAHA 2559 app, the Kitap Stüdyosu desktop app and jerupath.com.',
 
     'cat.mobile': 'Mobile',
     'cat.web': 'Web',
+    'cat.desktop': 'Desktop',
     'cat.automation': 'Automation',
 
     'contact.title.meta': 'Contact',
@@ -299,25 +307,21 @@ export const ui = {
     'app.c3': 'Share',
     'about.title': 'About',
     'about.p1':
-      "I'm Burak Avcı. I studied Computer and Instructional Technology Education at university, and I've worked closely with computer systems, mobile devices and data for years.",
+      "I'm Burak Avcı. I studied Computer and Instructional Technology Education at Pamukkale University, and I'm currently studying Computer Programming (associate degree) at Anadolu University. I spent about seven years in cybersecurity, working on mobile device examination and data analysis, so security is something I think about from day one in every app.",
     'about.p2':
       'I got into software out of necessity. When I do something by hand for the third time, I start thinking "a computer should do this", and that is usually how something new begins. codeba is that curiosity, grown up a little.',
     'about.p3':
       "I don't claim to know everything. If a job isn't a good fit for me, I'll say so up front; if it is, I'll see it through.",
     'about.tools': 'What I use',
     'about.toolsText':
-      "Flutter and Dart, React Native and Expo, JavaScript, TypeScript and React, Android. Astro and WordPress for websites, Figma for design. Code on GitHub, hosting on Vercel. And I'm pretty handy with Excel.",
+      "Flutter and Dart, React Native and Expo, JavaScript, TypeScript and React, Android. Astro and WordPress for websites, Tauri and Rust for Windows desktop apps, Figma for design. Code on GitHub, hosting on Vercel. And I'm pretty handy with Excel.",
     'about.cta': 'Get in touch →',
     'about.cert': 'Certificate',
     'about.certTitle': 'Mobile App & Frontend Developer Training Program',
     'about.certOrg': 'Only JavaScript',
-    'about.certDate': 'November 2024 – August 2025 · 10 months',
+    'about.certDate': 'November 2024 – August 2025',
     'about.certText':
-      'An intensive program built around live classes, mentoring sessions and assignments. Focused on React and React Native, it covered every stage of an app, from design to API testing.',
-    'about.certS1': 'hours of training',
-    'about.certS2': 'projects',
-    'about.certS3': 'assignments',
-    'about.certBreak': '136 h live classes · 598 h mentoring · 98 h video',
+      'A 10-month intensive program focused on React and React Native. We worked through every stage of an app, from design to API testing, on real projects.',
     'about.certTech': 'Used in the program',
 
     'footer.tagline': 'My work in mobile and web development.',
