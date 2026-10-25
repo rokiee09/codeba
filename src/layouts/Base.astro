@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, GITHUB, LINKEDIN } from '../consts';
 import { getLang, useT, switchPath, hasAlternate } from '../i18n';
 
 interface Props {
@@ -11,12 +11,40 @@ interface Props {
   wide?: boolean;
   // true: arama motorları bu sayfayı dizine eklemesin
   noindex?: boolean;
+  // sayfaya özel ek yapılandırılmış veri (JSON-LD)
+  schema?: Record<string, unknown>;
 }
 
 const lang = getLang(Astro.url);
 const t = useT(lang);
-const { title, description = t('meta.description'), wide = false, noindex = false } = Astro.props;
-const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${t('meta.suffix')}`;
+const { title, description = t('meta.description'), wide = false, noindex = false, schema } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE_TITLE}` : t('meta.homeTitle');
+const site = Astro.site!;
+// Google'a kim olduğunu ve sitenin ne olduğunu anlatan yapılandırılmış veri
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': new URL('/#burak', site).href,
+      name: 'Burak Avcı',
+      url: site.href,
+      jobTitle: t('meta.jobTitle'),
+      image: new URL('/apple-touch-icon.png', site).href,
+      sameAs: [GITHUB, LINKEDIN],
+      alumniOf: { '@type': 'CollegeOrUniversity', name: 'Pamukkale Üniversitesi' },
+      knowsAbout: ['Flutter', 'React Native', 'React', 'TypeScript', 'Astro', 'Tauri', 'Android', 'Mobile app development', 'Web development'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': new URL('/#site', site).href,
+      name: 'codeba',
+      url: site.href,
+      inLanguage: ['tr-TR', 'en-US'],
+      author: { '@id': new URL('/#burak', site).href },
+    },
+  ],
+};
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // iki dilde karşılığı olan sayfalar için arama motorlarına diğer dili göster
 const alternates = hasAlternate(Astro.url)
@@ -49,10 +77,17 @@ const alternates = hasAlternate(Astro.url)
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={lang === 'tr' ? 'tr_TR' : 'en_US'} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="codeba" />
     <meta property="og:image" content={new URL(lang === 'tr' ? '/og.png' : '/og-en.png', Astro.site)} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t('meta.homeTitle')} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="author" content="Burak Avcı" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(graph)} />
+    {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
