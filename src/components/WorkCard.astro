@@ -12,7 +12,7 @@ const t = useT(lang);
 const cat = t(`cat.${p.category}` as const);
 const linked = p.link && p.live !== false;
 const soon = lang === 'tr' ? 'Yakında yayında' : 'Coming soon';
-const visit = lang === 'tr' ? 'Siteyi aç' : 'Visit site';
+const visit = p.linkLabel?.[lang] ?? (lang === 'tr' ? 'Siteyi aç' : 'Visit site');
 ---
 
 <article class="card reveal" data-category={p.category} data-tilt>
@@ -22,7 +22,7 @@ const visit = lang === 'tr' ? 'Siteyi aç' : 'Visit site';
       p.media?.type === 'video' ? (
         <video src={p.media.src} poster={p.media.poster} autoplay muted loop playsinline preload="metadata" />
       ) : p.media?.type === 'image' ? (
-        <img src={p.media.src} alt={p.media.alt} loading="lazy" />
+        <img src={p.media.src} alt={p.media.alt} width="1600" height="1000" loading="lazy" decoding="async" />
       ) : (
         <div class="placeholder">
           <span>{p.name}</span>
