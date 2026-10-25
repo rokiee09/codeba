@@ -9,11 +9,13 @@ interface Props {
   title?: string;
   description?: string;
   wide?: boolean;
+  // true: arama motorları bu sayfayı dizine eklemesin
+  noindex?: boolean;
 }
 
 const lang = getLang(Astro.url);
 const t = useT(lang);
-const { title, description = t('meta.description'), wide = false } = Astro.props;
+const { title, description = t('meta.description'), wide = false, noindex = false } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE_TITLE}` : `${SITE_TITLE} · ${t('meta.suffix')}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // iki dilde karşılığı olan sayfalar için arama motorlarına diğer dili göster
@@ -35,6 +37,7 @@ const alternates = hasAlternate(Astro.url)
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
