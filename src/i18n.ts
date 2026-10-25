@@ -160,8 +160,19 @@ export const ui = {
       'Her şeyi bildiğimi iddia etmem. Bir iş bana uygun değilse bunu baştan söylerim, uygunsa sonuna kadar götürürüm.',
     'about.tools': 'Kullandıklarım',
     'about.toolsText':
-      "Flutter ve Dart, JavaScript ve React, Android. Siteler için Astro ve WordPress, tasarım için Figma. Kod GitHub'da, yayın Vercel'de. Excel'le de aram iyidir.",
+      "Flutter ve Dart, React Native ve Expo, JavaScript, TypeScript ve React, Android. Siteler için Astro ve WordPress, tasarım için Figma. Kod GitHub'da, yayın Vercel'de. Excel'le de aram iyidir.",
     'about.cta': 'İletişime geçin →',
+    'about.cert': 'Sertifika',
+    'about.certTitle': 'Mobile App & Frontend Developer Yetiştirme Programı',
+    'about.certOrg': 'Only JavaScript',
+    'about.certDate': 'Kasım 2024 – Ağustos 2025 · 10 ay',
+    'about.certText':
+      'Canlı dersler, mentorluk oturumları ve ödevlerle ilerleyen kapsamlı bir program. React ve React Native ağırlıklı; tasarımdan API testine kadar bir uygulamanın bütün aşamalarını kapsadı.',
+    'about.certS1': 'saat eğitim',
+    'about.certS2': 'proje',
+    'about.certS3': 'ödev',
+    'about.certBreak': '136 saat canlı ders · 598 saat mentorluk · 98 saat video',
+    'about.certTech': 'Programda kullanılanlar',
 
     'footer.tagline': 'Mobil uygulama ve web geliştirme üzerine çalışmalarım.',
     'footer.site': 'Site',
@@ -295,8 +306,19 @@ export const ui = {
       "I don't claim to know everything. If a job isn't a good fit for me, I'll say so up front; if it is, I'll see it through.",
     'about.tools': 'What I use',
     'about.toolsText':
-      "Flutter and Dart, JavaScript and React, Android. Astro and WordPress for websites, Figma for design. Code on GitHub, hosting on Vercel. And I'm pretty handy with Excel.",
+      "Flutter and Dart, React Native and Expo, JavaScript, TypeScript and React, Android. Astro and WordPress for websites, Figma for design. Code on GitHub, hosting on Vercel. And I'm pretty handy with Excel.",
     'about.cta': 'Get in touch →',
+    'about.cert': 'Certificate',
+    'about.certTitle': 'Mobile App & Frontend Developer Training Program',
+    'about.certOrg': 'Only JavaScript',
+    'about.certDate': 'November 2024 – August 2025 · 10 months',
+    'about.certText':
+      'An intensive program built around live classes, mentoring sessions and assignments. Focused on React and React Native, it covered every stage of an app, from design to API testing.',
+    'about.certS1': 'hours of training',
+    'about.certS2': 'projects',
+    'about.certS3': 'assignments',
+    'about.certBreak': '136 h live classes · 598 h mentoring · 98 h video',
+    'about.certTech': 'Used in the program',
 
     'footer.tagline': 'My work in mobile and web development.',
     'footer.site': 'Site',
