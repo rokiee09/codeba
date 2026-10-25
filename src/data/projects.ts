@@ -8,11 +8,13 @@ type Text = Record<Lang, string>;
 
 export type Project = {
   name: string;
-  category: 'mobile' | 'web' | 'automation';
+  category: 'mobile' | 'web' | 'desktop' | 'automation';
   stack: string[];
   summary: Text;
   detail?: Text;
   link?: string;
+  // bağlantı yazısı; boşsa "Siteyi aç"
+  linkLabel?: Text;
   // false: site henüz yayında değil; link gösterilmez, "Yakında yayında" rozeti çıkar
   live?: boolean;
   // animos'tan indirdiğin MP4'ü public/isler/ klasörüne koy, yolunu buraya yaz
@@ -38,6 +40,23 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    name: 'Kitap Stüdyosu',
+    category: 'desktop',
+    stack: ['Tauri', 'Rust', 'React', 'TypeScript'],
+    summary: {
+      tr: 'Windows’ta internetsiz çalışan kitap yazma ve yayınlama uygulaması. Yazıyı, sayfa düzenini ve dışa aktarmayı tek pencerede topluyor.',
+      en: 'An offline Windows app for writing and publishing books. Writing, page layout and export live in one window.',
+    },
+    detail: {
+      tr: 'Bölüm ağacı, blok tabanlı editör (metin, görsel, video, tablo, kod, QR), Word’den içe aktarma, EPUB, PDF ve HTML olarak dışa aktarma, sürüm geçmişi ve yazım denetimi var. Arayüz React ve TypeScript, arka taraf Rust ve SQLite. İstenirse Google Drive klasörü üzerinden iki bilgisayar arasında eşitleniyor.',
+      en: 'It has a chapter tree, a block-based editor (text, image, video, table, code, QR), Word import, EPUB, PDF and HTML export, version history and proofreading. The interface is React and TypeScript, the back end Rust and SQLite. It can sync between two computers through a Google Drive folder.',
+    },
+    link: 'https://github.com/rokiee09/kitapst-dyo',
+    linkLabel: { tr: 'Kodu GitHub’da gör', en: 'View code on GitHub' },
+    media: { type: 'image', src: '/isler/kitap-studyosu.jpg', alt: 'Kitap Stüdyosu editör ekranı: bölüm ağacı, kitap sayfası ve içerik blokları' },
+    featured: true,
+  },
+  {
     name: 'jerupath.com',
     category: 'web',
     stack: ['HTML', 'CSS', 'JavaScript', 'Node.js'],
@@ -46,8 +65,8 @@ export const projects: Project[] = [
       en: 'A digital travel guide for visitors to Jerusalem and the Holy Land, built to make the trip easier, better informed and well planned.',
     },
     detail: {
-      tr: 'Tarihî, dinî ve kültürel mekânların tanıtıldığı bir gezi rehberi; harita destekli rota planlama; konaklama, ulaşım ve yeme-içme önerileri. Yanında seyahat paketleri ve videolar için ayrı sayfalar var. Kod GitHub’da, dağıtım Vercel üzerinde.',
-      en: 'A guide to historic, religious and cultural sites; map-based route planning; tips on where to stay, how to get around and where to eat. Separate pages for travel packages and videos. Code on GitHub, deployed on Vercel.',
+      tr: 'Çok dilli bir yapı üzerine kurulu; tarihî, dinî ve kültürel mekânların tanıtıldığı bir gezi rehberi; harita destekli rota planlama; konaklama, ulaşım ve yeme-içme önerileri. Yanında seyahat paketleri ve videolar için ayrı sayfalar var. Kod GitHub’da, dağıtım Vercel üzerinde.',
+      en: 'Built as a multilingual site: a guide to historic, religious and cultural sites; map-based route planning; tips on where to stay, how to get around and where to eat. Separate pages for travel packages and videos. Code on GitHub, deployed on Vercel.',
     },
     link: 'https://www.jerupath.com',
     // hosting açılınca true yap: kart linke dönüşür, rozet kalkar
@@ -65,6 +84,6 @@ export const projects: Project[] = [
       en: "The site you're looking at. Built with care so it loads fast and is easy to maintain.",
     },
     media: { type: 'image', src: '/isler/codeba.jpg', alt: 'codeba.dev ana sayfası: 3D laptop ve telefon sahnesi' },
-    featured: true,
+    featured: false,
   },
 ];
